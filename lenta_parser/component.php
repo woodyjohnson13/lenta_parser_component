@@ -12,6 +12,15 @@ class LentaParserComponent extends CBitrixComponent
         try {
             $this->check_modules();
             $this->init_blocks();
+            
+            if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'parse') {
+                $this->parse_response = $this->parse_news();
+            }
+            
+            $this->arResult = $this->get_template_data();
+            
+            $this->includeComponentTemplate();
+            
         } catch (Exception $e) {
             ShowError($e->getMessage());
         }
