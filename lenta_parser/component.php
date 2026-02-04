@@ -50,4 +50,16 @@ class LentaParserComponent extends CBitrixComponent
             throw new Exception("Highload блок не найден");
         }
     }
+    private function parse_news()
+    {
+        try {
+            
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => "Ошибка: " . $e->getMessage(),
+                'data' => []
+            ];
+        }
+    }
 }
