@@ -1,0 +1,15 @@
+.lenta-parser {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family:
+    "Roboto",
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+@media (max-width: 480px) {
+  .lenta-parser {
+    padding: 15px;
+  }
