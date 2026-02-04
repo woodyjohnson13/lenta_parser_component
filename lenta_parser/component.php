@@ -52,8 +52,40 @@ class LentaParserComponent extends CBitrixComponent
     }
     private function parse_news()
     {
+        //!Bad practice
+        //TODO: Replace with using env variable later
+        $url = "https://lenta.ru/rss";
+        
         try {
             
+            $content = @file_get_contents($url, false);
+            
+            if (!$content) {
+                throw new Exception("Не удалось загрузить ленту!");
+            }
+            
+            libxml_use_internal_errors(true);
+            $xml = simplexml_load_string($content);
+            
+            if ($xml === false) {
+                $errors = libxml_get_errors();
+                throw new Exception("Ошибка парсинга XML: " . $errors[0]->message);
+            }
+            
+            $items = $xml->channel->item;
+            
+            if (empty($items)) {
+                throw new Exception("Нет новостей в ленте");
+            }
+            
+            $saved = 0;
+            $updated = 0;
+            $category_map = [];
+            
+            $highload_block = Bitrix\Highloadblock\HighloadBlockTable::getById($this->highblock_id)->fetch();
+            $entity = Bitrix\Highloadblock\HighloadBlockTable::compileEntity($highload_block);
+            //? Basically our db table object now
+            $entity_class = $entity->getDataClass(); 
         } catch (Exception $e) {
             return [
                 'success' => false,
