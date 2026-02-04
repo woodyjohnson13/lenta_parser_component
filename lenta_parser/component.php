@@ -103,6 +103,33 @@ class LentaParserComponent extends CBitrixComponent
                     false,
                     ['ID']
                 )->Fetch();
+                $category_id = null;
+                $category_name = (string)$item->category;
+                
+                if (!empty($category_name)) {
+                    if (!isset($category_map[$category_name])) {
+                        $category = $entity_class::getList([
+                            'filter' => ['=UF_NAME' => $category_name]
+                        ])->fetch();
+                        
+                        if ($category) {
+                            $category_id = $category['ID'];
+                        } else {
+                            $result = $entity_class::add([ 
+                                'UF_NAME' => $category_name,
+                                'UF_XML_ID' => CUtil::translit($category_name, "ru"),
+                                'UF_SORT' => 500,
+                            ]);
+                            
+                            if ($result->isSuccess()) {
+                                $category_id = $result->getId();
+                            }
+                        }
+                        $category_map[$category_name] = $category_id;
+                    } else {
+                        $category_id = $category_map[$category_name];
+                    }
+                }
         } catch (Exception $e) {
             return [
                 'success' => false,
