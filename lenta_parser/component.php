@@ -130,6 +130,57 @@ class LentaParserComponent extends CBitrixComponent
                         $category_id = $category_map[$category_name];
                     }
                 }
+                
+                $properties = [
+                    'LINK' => (string)$item->link,
+                    'AUTHOR' => (string)$item->author
+                ];
+                
+                if ($category_id) {
+                    $properties['CATEGORY'] = $category_id;
+                }
+                
+                $publication_date = $this->format_date((string)$item->pubDate);
+                if ($existing) {
+                    $el = new CIBlockElement();
+                    $result = $el->Update($existing['ID'], [
+                        'NAME' => $title,
+                        'DATE_ACTIVE_FROM' => $publication_date,
+                        'PROPERTY_VALUES' => $properties
+                    ]);
+                    
+                    if ($result) {
+                        $updated++;
+                    }
+                } else {
+                    $el = new CIBlockElement();
+                    $result = $el->Add([
+                        'IBLOCK_ID' => $this->iblock_id,
+                        'NAME' => $title,
+                        'CODE' => CUtil::translit($title, "ru", ['replace_space' => '-']),
+                        'XML_ID' => $guid,
+                        'ACTIVE' => 'Y',
+                        'DATE_ACTIVE_FROM' => $publication_date,
+                        'PROPERTY_VALUES' => $properties
+                    ]);
+                    
+                    if ($result) {
+                        $saved++;
+                    }
+                }
+            }
+            
+            return [
+                'success' => true,
+                'message' => "Успешно обработано!",
+                'data' => [
+                    'total' => count($items),
+                    'saved' => $saved,
+                    'updated' => $updated,
+                    'categories' => count($category_map)
+                ]
+            ];
+            
         } catch (Exception $e) {
             return [
                 'success' => false,
