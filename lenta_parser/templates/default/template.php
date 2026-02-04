@@ -38,6 +38,7 @@ $this->addExternalCss($this->GetFolder() . '/style.css');
             }, 2000);
         </script>
     <?php endif; ?>
+
     <div class="categories-container">
         <div class="categories-title">Категории</div>
         <div class="categories-tags">
@@ -53,4 +54,57 @@ $this->addExternalCss($this->GetFolder() . '/style.css');
             <?php endforeach; ?>
         </div>
     </div>
+
+    <?php if (!empty($arResult['NEWS'])): ?>
+        <div class="news-count">
+            Найдено новостей: <strong><?= count($arResult['NEWS']) ?></strong>
+            <?php if ($arResult['SELECTED_CATEGORY'] != 'all'): ?>
+                в категории "<?= htmlspecialchars($arResult['SELECTED_CATEGORY']) ?>"
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($arResult['NEWS'])): ?>
+        <div class="news-grid">
+            <?php foreach ($arResult['NEWS'] as $news): ?>
+                <div class="news-card">
+                    <div class="news-card-header">
+                        <?php if (!empty($news['CATEGORY'])): ?>
+                            <div class="news-card-category">
+                                <?= htmlspecialchars($news['CATEGORY']) ?>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <h3 class="news-card-title">
+                            <a href="<?= htmlspecialchars($news['LINK']) ?>" target="_blank" rel="noopener">
+                                <?= htmlspecialchars($news['TITLE']) ?>
+                            </a>
+                        </h3>
+                    </div>
+                      
+                    <div class="news-card-footer">
+                        <div class="news-card-date">
+                            <span class="icon">📅</span>
+                            <?= htmlspecialchars($news['DATE']) ?>
+                        </div>
+                        
+                        <?php if (!empty($news['AUTHOR'])): ?>
+                            <div class="news-card-author">
+                                <span class="icon">✍️</span>
+                                <?= htmlspecialchars($news['AUTHOR']) ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php else: ?>
+        <div class="no-news">
+            <?php if ($arResult['SELECTED_CATEGORY'] != 'all'): ?>
+                📭 В категории "<?= htmlspecialchars($arResult['SELECTED_CATEGORY']) ?>" новостей не найдено
+            <?php else: ?>
+                📭 Новости не найдены. Нажмите "Загрузить свежие новости"
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
 </div>
