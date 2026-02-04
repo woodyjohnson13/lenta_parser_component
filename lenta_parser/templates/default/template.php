@@ -108,3 +108,13 @@ $this->addExternalCss($this->GetFolder() . '/style.css');
         </div>
     <?php endif; ?>
 </div>
+
+<script>
+document.getElementById('parse-form')?.addEventListener('submit', function(e) {
+    var button = document.getElementById('parse-button');
+    if (button) {
+        button.innerHTML = '<span>⏳</span> Загружаем...';
+        button.disabled = true;
+    }
+});
+</script>
