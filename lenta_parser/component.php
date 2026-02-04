@@ -270,4 +270,13 @@ class LentaParserComponent extends CBitrixComponent
         
         return $data;
     }
+    
+    private function format_date($date)
+    {
+        $timestamp = MakeTimeStamp($date, "D, d M Y H:i:s T");
+        if ($timestamp === false) {
+            $timestamp = time();
+        }
+        return ConvertTimeStamp($timestamp, 'FULL');
+    }
 }
