@@ -192,4 +192,82 @@ class LentaParserComponent extends CBitrixComponent
             ];
         }
     }
+    
+    private function get_template_data()
+    {
+        $data = [];
+        
+        $selected_category = $_GET['category'] ?? 'all';
+        
+        //? Maybe should make global highload block entity?
+        $highload_block = Bitrix\Highloadblock\HighloadBlockTable::getById($this->highblock_id)->fetch();
+        $entity = Bitrix\Highloadblock\HighloadBlockTable::compileEntity($highload_block);
+        $entity_class = $entity->getDataClass(); 
+        
+        $categories_response = $entity_class::getList([ 
+            'order' => ['UF_NAME' => 'ASC'],
+            'select' => ['ID', 'UF_NAME']
+        ]);
+        
+        $categories = [];
+        while ($cat = $categories_response->fetch()) {
+            $categories[] = [
+                'ID' => $cat['ID'],
+                'NAME' => $cat['UF_NAME']
+            ];
+        }
+        
+        $filter = ['IBLOCK_ID' => $this->iblock_id, 'ACTIVE' => 'Y'];
+        
+        if ($selected_category !== 'all') {
+            $category_id = null;
+            foreach ($categories as $cat) {
+                if ($cat['NAME'] == $selected_category) {
+                    $category_id = $cat['ID'];
+                    break;
+                }
+            }
+            
+            if ($category_id) {
+                $filter['PROPERTY_CATEGORY'] = $category_id;
+            }
+        }
+        
+        $news_response = CIBlockElement::GetList(
+            ['DATE_ACTIVE_FROM' => 'DESC'],
+            $filter,
+            false,
+            ['nTopCount' => $this->arParams['NEWS_COUNT'] ?? 50],
+            ['ID', 'NAME', 'DATE_ACTIVE_FROM', 'PREVIEW_TEXT', 'PROPERTY_LINK', 'PROPERTY_CATEGORY', 'PROPERTY_AUTHOR']
+        );
+        
+        $news = [];
+        while ($item = $news_response->Fetch()) {
+            $catName = '';
+            if ($item['PROPERTY_CATEGORY_VALUE']) {
+                foreach ($categories as $cat) {
+                    if ($cat['ID'] == $item['PROPERTY_CATEGORY_VALUE']) {
+                        $catName = $cat['NAME'];
+                        break;
+                    }
+                }
+            }
+            
+            $news[] = [
+                'ID' => $item['ID'],
+                'TITLE' => $item['NAME'],
+                'LINK' => $item['PROPERTY_LINK_VALUE'],
+                'DATE' => FormatDate('d.m.Y H:i', MakeTimeStamp($item['DATE_ACTIVE_FROM'])),
+                'CATEGORY' => $catName,
+                'AUTHOR' => $item['PROPERTY_AUTHOR_VALUE'],
+            ];
+        }
+        
+        $data['CATEGORIES'] = $categories;
+        $data['NEWS'] = $news;
+        $data['SELECTED_CATEGORY'] = $selected_category;
+        $data['PARSE_RESULT'] = $this->parse_response;
+        
+        return $data;
+    }
 }
