@@ -18,4 +18,24 @@ $this->addExternalCss($this->GetFolder() . '/style.css');
             </button>
         </form>
     </div>
+
+    <?php if ($arResult['PARSE_RESULT']): ?>
+        <div class="parse-result <?= $arResult['PARSE_RESULT']['success'] ? 'success' : 'error' ?>">
+            <?= $arResult['PARSE_RESULT']['message'] ?>
+            <?php if ($arResult['PARSE_RESULT']['success'] && !empty($arResult['PARSE_RESULT']['data'])): ?>
+                <div class="parse-details">
+                    Всего в RSS: <?= $arResult['PARSE_RESULT']['data']['total'] ?><br>
+                    Новых: <?= $arResult['PARSE_RESULT']['data']['saved'] ?><br>
+                    Обновлено: <?= $arResult['PARSE_RESULT']['data']['updated'] ?><br>
+                    Категорий: <?= $arResult['PARSE_RESULT']['data']['categories'] ?>
+                </div>
+            <?php endif; ?>
+        </div>
+        
+        <script>
+            setTimeout(function() {
+                window.location.href = window.location.pathname + '?category=<?= $arResult['SELECTED_CATEGORY'] ?>';
+            }, 2000);
+        </script>
+    <?php endif; ?>
 </div>

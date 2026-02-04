@@ -9,6 +9,7 @@
     -apple-system,
     sans-serif;
 }
+
 .lenta-header {
   text-align: center;
   margin: 0 0 40px 0;
@@ -30,6 +31,25 @@
   font-size: 1.2rem;
   opacity: 0.9;
   font-weight: 300;
+}
+.parse-result {
+  padding: 16px 24px;
+  border-radius: 12px;
+  margin: 20px 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+.parse-result.success {
+  background: #e7f7ef;
+  color: #0a5c36;
+  border: 1px solid #a3e9c4;
+}
+
+.parse-result.error {
+  background: #fde8e8;
+  color: #9b1c1c;
+  border: 1px solid #f9b4b4;
 }
 @media (max-width: 480px) {
   .lenta-parser {
