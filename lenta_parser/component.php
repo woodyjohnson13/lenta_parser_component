@@ -86,6 +86,23 @@ class LentaParserComponent extends CBitrixComponent
             $entity = Bitrix\Highloadblock\HighloadBlockTable::compileEntity($highload_block);
             //? Basically our db table object now
             $entity_class = $entity->getDataClass(); 
+            
+            foreach ($items as $item) {
+                $guid = (string)$item->guid;
+                $title = (string)$item->title;
+                
+                if (empty($guid) || empty($title)) {
+                    continue; 
+                }
+                
+                //! Bad practice, but didn`t come to better solution yet
+                $existing = CIBlockElement::GetList(
+                    [],
+                    ['IBLOCK_ID' => $this->iblock_id, '=XML_ID' => $guid],
+                    false,
+                    false,
+                    ['ID']
+                )->Fetch();
         } catch (Exception $e) {
             return [
                 'success' => false,
