@@ -38,4 +38,19 @@ $this->addExternalCss($this->GetFolder() . '/style.css');
             }, 2000);
         </script>
     <?php endif; ?>
+    <div class="categories-container">
+        <div class="categories-title">Категории</div>
+        <div class="categories-tags">
+            <a href="?category=all" 
+               class="category-tag <?= $arResult['SELECTED_CATEGORY'] == 'all' ? 'active' : '' ?>">
+                Все новости
+            </a>
+            <?php foreach ($arResult['CATEGORIES'] as $category): ?>
+                <a href="?category=<?= urlencode($category['NAME']) ?>" 
+                   class="category-tag <?= $arResult['SELECTED_CATEGORY'] == $category['NAME'] ? 'active' : '' ?>">
+                    <?= htmlspecialchars($category['NAME']) ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
 </div>
