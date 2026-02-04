@@ -6,6 +6,7 @@ class LentaParserComponent extends CBitrixComponent
     private $iblock_id = null;
     private $highblock_id = null;
     private $parse_response = null;
+    
     public function executeComponent()
     {
         try {
@@ -50,6 +51,7 @@ class LentaParserComponent extends CBitrixComponent
             throw new Exception("Highload блок не найден");
         }
     }
+    
     private function parse_news()
     {
         //!Bad practice
@@ -103,6 +105,7 @@ class LentaParserComponent extends CBitrixComponent
                     false,
                     ['ID']
                 )->Fetch();
+                
                 $category_id = null;
                 $category_name = (string)$item->category;
                 
