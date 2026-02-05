@@ -34,7 +34,7 @@ $this->addExternalCss($this->GetFolder() . '/style.css');
         
         <script>
             setTimeout(function() {
-                window.location.href = window.location.pathname + '?category=<?= $arResult['SELECTED_CATEGORY'] ?>';
+                window.location.href = window.location.pathname + '?category=<?= urlencode($arResult['SELECTED_CATEGORY']) ?>';
             }, 2000);
         </script>
     <?php endif; ?>
@@ -60,6 +60,9 @@ $this->addExternalCss($this->GetFolder() . '/style.css');
             Найдено новостей: <strong><?= count($arResult['NEWS']) ?></strong>
             <?php if ($arResult['SELECTED_CATEGORY'] != 'all'): ?>
                 в категории "<?= htmlspecialchars($arResult['SELECTED_CATEGORY']) ?>"
+            <?php endif; ?>
+            <?php if ($arResult['PAGINATION']['TOTAL_ITEMS'] > count($arResult['NEWS'])): ?>
+                (показано <?= count($arResult['NEWS']) ?> из <?= $arResult['PAGINATION']['TOTAL_ITEMS'] ?>)
             <?php endif; ?>
         </div>
     <?php endif; ?>
@@ -98,6 +101,47 @@ $this->addExternalCss($this->GetFolder() . '/style.css');
                 </div>
             <?php endforeach; ?>
         </div>
+        
+        <?php if ($arResult['PAGINATION']['TOTAL_PAGES'] > 1): ?>
+            <div class="pagination-container">
+                <div class="pagination">
+                    <?php if ($arResult['PAGINATION']['CURRENT_PAGE'] > 1): ?>
+                        <a href="?category=<?= urlencode($arResult['SELECTED_CATEGORY']) ?>&page=1" class="pagination-item pagination-first">
+                            ««
+                        </a>
+                        <a href="?category=<?= urlencode($arResult['SELECTED_CATEGORY']) ?>&page=<?= $arResult['PAGINATION']['CURRENT_PAGE'] - 1 ?>" class="pagination-item pagination-prev">
+                            «
+                        </a>
+                    <?php endif; ?>
+                    
+                    <?php 
+                    $start_page = max(1, $arResult['PAGINATION']['CURRENT_PAGE'] - 2);
+                    $end_page = min($arResult['PAGINATION']['TOTAL_PAGES'], $arResult['PAGINATION']['CURRENT_PAGE'] + 2);
+                    
+                    for ($i = $start_page; $i <= $end_page; $i++): ?>
+                        <a href="?category=<?= urlencode($arResult['SELECTED_CATEGORY']) ?>&page=<?= $i ?>" 
+                           class="pagination-item <?= $i == $arResult['PAGINATION']['CURRENT_PAGE'] ? 'active' : '' ?>">
+                            <?= $i ?>
+                        </a>
+                    <?php endfor; ?>
+                    
+                    <?php if ($arResult['PAGINATION']['CURRENT_PAGE'] < $arResult['PAGINATION']['TOTAL_PAGES']): ?>
+                        <a href="?category=<?= urlencode($arResult['SELECTED_CATEGORY']) ?>&page=<?= $arResult['PAGINATION']['CURRENT_PAGE'] + 1 ?>" class="pagination-item pagination-next">
+                            »
+                        </a>
+                        <a href="?category=<?= urlencode($arResult['SELECTED_CATEGORY']) ?>&page=<?= $arResult['PAGINATION']['TOTAL_PAGES'] ?>" class="pagination-item pagination-last">
+                            »»
+                        </a>
+                    <?php endif; ?>
+                </div>
+                
+                <div class="pagination-info">
+                    Страница <?= $arResult['PAGINATION']['CURRENT_PAGE'] ?> из <?= $arResult['PAGINATION']['TOTAL_PAGES'] ?>
+                    | Всего новостей: <?= $arResult['PAGINATION']['TOTAL_ITEMS'] ?>
+                </div>
+            </div>
+        <?php endif; ?>
+        
     <?php else: ?>
         <div class="no-news">
             <?php if ($arResult['SELECTED_CATEGORY'] != 'all'): ?>
