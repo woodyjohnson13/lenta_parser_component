@@ -57,12 +57,9 @@ $this->addExternalCss($this->GetFolder() . '/style.css');
 
     <?php if (!empty($arResult['NEWS'])): ?>
         <div class="news-count">
-            Найдено новостей: <strong><?= count($arResult['NEWS']) ?></strong>
+            Найдено новостей:  <?= $arResult['PAGINATION']['TOTAL_ITEMS'] ?></strong>
             <?php if ($arResult['SELECTED_CATEGORY'] != 'all'): ?>
                 в категории "<?= htmlspecialchars($arResult['SELECTED_CATEGORY']) ?>"
-            <?php endif; ?>
-            <?php if ($arResult['PAGINATION']['TOTAL_ITEMS'] > count($arResult['NEWS'])): ?>
-                (показано <?= count($arResult['NEWS']) ?> из <?= $arResult['PAGINATION']['TOTAL_ITEMS'] ?>)
             <?php endif; ?>
         </div>
     <?php endif; ?>
