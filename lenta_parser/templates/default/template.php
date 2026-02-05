@@ -151,6 +151,18 @@ $this->addExternalCss($this->GetFolder() . '/style.css');
             <?php endif; ?>
         </div>
     <?php endif; ?>
+
+        
+        <footer class="lenta-footer">
+            <div class="footer-content">
+                <div class="footer-text">
+                    Developed by 
+                    <a href="https://github.com/woodyjohnson13" target="_blank" rel="noopener" class="developer-link">
+                        WoodyJohnson
+                    </a>
+                </div>
+            </div>
+        </footer>
 </div>
 
 <script>
